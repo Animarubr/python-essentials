@@ -38,7 +38,12 @@ if arguments[0] == "read":
             print()
 
 if arguments[0] == "new":
-    title = arguments[1]
+    try:
+        title = arguments[1]
+    except IndexError as e:
+        print(f"[ERROR] {str(e)}")
+        sys.exit(1)
+
     text = [
         f"{title}",
         input("tag:").strip(),

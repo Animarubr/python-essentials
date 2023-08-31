@@ -8,17 +8,17 @@ correspondente.
 Como usar:
 
 Ter a variável LANG devidamente configurada ex:
-	export LANG=pt_br
+    export LANG=pt_br
 
 Ou informe atraves do CLI argument `--lang`
 
 Ou o usuário terá que digitar
 
 Execução:
-	
-	python3 hello.py
-	ou
-	./hello.py
+    
+    python3 hello.py
+    ou
+    ./hello.py
 """
 __version__ = "0.1.3"
 __author__ = "Marcos Silva"
@@ -29,7 +29,16 @@ import sys
 
 arguments = {"lang": None, "count": 1}
 for arg in sys.argv[1:]:
-    key, value = arg.split("=")
+    try:
+        key, value = arg.split("=")
+    except ValueError as e:
+        # TODO: Usar Logging
+        print(f"[Error] {str(e)}")
+        print("You need to use `=`")
+        print(f"You passed {arg}")
+        print("Try with --key=value")
+        sys.exit(1)
+
     key = key.lstrip("-").strip()
     value = value.strip()
     if key not in arguments:
@@ -55,5 +64,15 @@ msg = {
     "fr_FR": "Bonjour, Monde!",
 }
 
-# O(1)
-print(msg[current_language] * int(arguments["count"]))
+"""# try com valor default
+message = msg.get(current_language, msg["en_US"])"""
+
+try:
+    message = msg[current_language]
+    print(message * int(arguments["count"]))
+except KeyError as e:
+    print(f"[ERROR] {str(e)}")
+    print(f"Language is invalid, choose from: {list(msg.keys())}")
+    sys.exit(1)
+
+print(message * int(arguments["count"]))
