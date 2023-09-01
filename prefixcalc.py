@@ -33,6 +33,23 @@ import sys
 import os
 from datetime import datetime
 
+log_level = os.getenv("LOG_LEVEL", "WARNING").upper()
+
+# nossa instancia
+# TODO: usar funções
+# TODO: usar lib (loguru)
+log = logging.Logger("prefixcalc.py", log_level)
+# level
+ch = logging.StreamHandler()
+ch.setLevel(log_level)
+# formatação
+fmt = logging.Formatter(
+    "%(asctime)s %(name)s %(levelname)s l:%(lineno)d f:%(filename)s: %(message)s"
+)
+ch.setFormatter(fmt)
+# destino
+log.addHandler(ch)
+
 arguments = sys.argv[1:]
 
 if not arguments:
@@ -69,7 +86,7 @@ for num in nums:
 try:
     n1, n2 = validated_nums
 except ValueError as e:
-    print(f"[ERROR] {str(e)}")
+    log.error(str(e))
     sys.exit(1)
 
 if operation == "sum":
@@ -93,5 +110,5 @@ try:
         file_.write(f"{timestamp} - {user} - {operation},{n1},{n2} = {result}\n")
 except PermissionError as e:
     #  TODO: logging
-    print(str(e))
+    log.error(str(e))
     sys.exit(1)
