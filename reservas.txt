@@ -1,0 +1,4 @@
+Marcos,1,6
+Caio,2,3
+alfredo,3,8
+caca,4,1
