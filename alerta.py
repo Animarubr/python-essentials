@@ -17,22 +17,28 @@ import logging
 log = logging.Logger("alerta")
 
 info = {"temperatura": None, "umidade": None}
-keys = info.keys()
 
-for key in keys:
-    try:
-        info[key] = float(input(f"Qual a {key} do ar no momento? ").strip())
-    except ValueError:
-        log.error(f"{key.capitalize()} inválida")
-        sys.exit(1)
+while True:
+    info_size = len(info.values())
+    filled_size = len([value for value in info.values() if value is not None])
+    if info_size == filled_size:
+        break
+
+    for key in info.keys():
+        if info[key] is not None:
+            continue
+        try:
+            info[key] = float(input(f"Qual a {key} do ar no momento? ").strip())
+        except ValueError:
+            log.error(f"{key.capitalize()} inválida")
+            break
 
 
-temp = info["temperatura"]
-umidade = info["umidade"]
+temp, umidade = info.values()
 
 if temp > 45:
     print("ALERTA!!! Perigo calor extremo")
-elif (temp * 3) >= umidade:
+elif (temp * 3) > umidade:
     print("ALERTA!! perigo calor úmido")
 elif temp >= 10 and temp <= 30:
     print("Normal")
